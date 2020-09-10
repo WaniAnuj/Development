@@ -1,4 +1,4 @@
-#include <Servo.h>
+ #include <Servo.h>
 #include <SoftwareSerial.h>
 
 Servo myservo;
@@ -111,7 +111,7 @@ void loop()
     }
     
     
-  else if(val == 'P'){
+//  else if(val == 'P'){
 Serial.println("Started");
  myservo.write(90);
  delay(1000); 
@@ -157,7 +157,7 @@ tempcolor = colorCheck();
       }
   tempcolor = colorCheck();
   }
-  }
+//  }
  }  
     
 void color()  

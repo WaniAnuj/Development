@@ -5,25 +5,25 @@ ServoTimer2 left;
 ServoTimer2 base;
 ServoTimer2 right;
 
-int x_key = A0;    // analog pin used to connect the Joystick1
-int y_key = A1;    // analog pin used to connect the Joystick1
-int x_key1 = A2;   // analog pin used to connect the Joystick2
-int y_key1 = A3;   // analog pin used to connect the Joystick2
+int left_joy_ctrl = A0;    // analog pin used to connect the Joystick1
+int base_joy_ctrl = A3;    // analog pin used to connect the Joystick1
+int right_joy_ctrl = A2;   // analog pin used to connect the Joystick2
+int claw_joy_ctrl = A1;   // analog pin used to connect the Joystick2
 
-int x_pos;        // variable to read the value from the analog pin
-int y_pos;
-int x_pos1;
-int y_pos1;
+int left_joy_val;        // variable to read the value from the analog pin
+int base_joy_val;
+int right_joy_val;
+int claw_joy_val;
 
 int claw_pin = 6;   // variable to assign the servo to pin 6 
 int left_pin = 9;   // variable to assign the servo to pin 9 
 int base_pin = 10;  // variable to assign the servo to pin 10 
 int right_pin = 11;  // variable to assign the servo to pin 11
 
-int initial_position = 750;
-int initial_position1 = 750;
-int initial_position2 = 750;
-int initial_position3 = 750;
+int initial_positionL = 750;
+int initial_positionB = 750;
+int initial_positionR = 750;
+int initial_positionC = 750;
 
 void setup ( ) {
 Serial.begin (9600) ;
@@ -33,68 +33,64 @@ left.attach (left_pin) ;
 base.attach (base_pin) ;
 right.attach (right_pin) ;
 
-claw.write (initial_position);  // Initially the default position of the servo
-left.write (initial_position1);
-base.write (initial_position2);
-right.write (initial_position3);
+claw.write (initial_positionL);  // Initially the default position of the servo
+left.write (initial_positionB);
+base.write (initial_positionR);
+right.write (initial_positionC);
 
 }
 
 void loop ( ) {
 
-x_pos = analogRead (x_key) ;  // reads the value of the joystick1 (value between 0 and 1023)
-Serial.println(x_pos);
-y_pos = analogRead (y_key) ;       
-Serial.println(y_pos);
+left_joy_val = analogRead (left_joy_ctrl);  // reads the value of the joystick1 (value between 0 and 1023)
+base_joy_val = analogRead (base_joy_ctrl);
 
-
-x_pos1 = analogRead (x_key1) ;   // reads the value of the joystick2 (value between 0 and 1023)
-Serial.println(x_pos1);
-y_pos1 = analogRead (y_key1) ;
-Serial.println(y_pos1);
+right_joy_val = analogRead (right_joy_ctrl);   // reads the value of the joystick2 (value between 0 and 1023)
+claw_joy_val = analogRead (claw_joy_ctrl) ;
+//Serial.println(claw_joy_val);
 
 // if less than 300 or more than 700 the servo should move otherwise nothing
 // Controlling the claw and base motor using 1st joystick
-if (x_pos < 350)
+if (left_joy_val < 350)
 {
-if (initial_position > 2250)
+if (initial_positionL > 2250)
 { }
 else
 {
-  initial_position = initial_position + 24;
-  claw.write (initial_position);
+  initial_positionL = initial_positionL + 16;
+  left.write (initial_positionL);
   delay (10);
 }
 }
-if (x_pos > 650)
+if (left_joy_val > 650)
 {
-if (initial_position < 755)
+if (initial_positionL < 755)
 { }
 else
 {
-initial_position = initial_position - 5;
-claw.write (initial_position) ;
+initial_positionL = initial_positionL - 16;
+left.write (initial_positionL) ;
 delay (10) ;
 }
 }
 
-if (y_pos < 350){
-if (initial_position1 > 2250)
+if (base_joy_val > 650){
+if (initial_positionB > 2250)
 { }
 else
-{ initial_position1 = initial_position1 + 24;
-left.write (initial_position1);
+{ initial_positionB = initial_positionB + 16;
+base.write (initial_positionB);
 delay (10) ;
 }
 }
-if (y_pos > 650)
+if (base_joy_val < 350)
 {
-if (initial_position1 < 755)
+if (initial_positionB < 755)
 { }
 else
 {
-initial_position1 = initial_position1 - 24;
-left.write (initial_position1) ;
+initial_positionB = initial_positionB - 16;
+base.write (initial_positionB) ;
 delay (10) ;
 }
 }
@@ -102,46 +98,46 @@ delay (10) ;
 // if less than 300 or more than 700 the servo should move otherwise nothing
 // Controlling the left and right motor using 2nd joystick
 
-if (x_pos1 < 350)
+if (right_joy_val > 650)
 {
-if (initial_position2 < 755)
+if (initial_positionR < 755)
 { }
 else
 {
-  initial_position2 = initial_position2 - 24;
-  base.write (initial_position2);
+  initial_positionR = initial_positionR - 16;
+  right.write (initial_positionR);
   delay (10) ;
 }
 }
-if (x_pos1 > 650)
+if (right_joy_val < 350)
 {
-if (initial_position2 > 2250)
+if (initial_positionR > 2250)
 {}
 else
 {
-initial_position2 = initial_position2 + 24;
-base.write (initial_position2) ;
+initial_positionR = initial_positionR + 16;
+right.write (initial_positionR) ;
 delay (10) ;
 }
 }
 
-if (y_pos1 < 350){
-if (initial_position3 < 755)
+if (claw_joy_val < 350){
+if (initial_positionC < 755)
 { }
 else
-{ initial_position3 = initial_position3 - 24;
-right.write (initial_position3);
+{ initial_positionC = initial_positionC - 16;
+claw.write (initial_positionC);
 delay (10) ;
 }
 }
-if (y_pos1 > 650)
+if (claw_joy_val > 650)
 {
-if (initial_position3 > 2250)
+if (initial_positionC > 2250)
 { }
 else
 {
-initial_position3 = initial_position3 + 24;
-right.write ( initial_position3 ) ;
+initial_positionC = initial_positionC + 16 ;
+claw.write ( initial_positionC );
 delay (10) ;
 }
 }
