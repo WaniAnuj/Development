@@ -21,12 +21,21 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  Serial.println("Moving forward");
+  Serial.println("Moving FORWARD");
   analogWrite(en1, 100);
   analogWrite(en2, 100);
   digitalWrite(left_motor_1, HIGH);
   digitalWrite(left_motor_2, LOW);
   digitalWrite(right_motor_1, HIGH);
   digitalWrite(right_motor_2, LOW);
-  delay(50);
+  delay(500);
+
+  Serial.println("Stopping");
+  analogWrite(en1, 0);
+  analogWrite(en2, 0);
+  digitalWrite(left_motor_1, LOW);
+  digitalWrite(left_motor_2, LOW);
+  digitalWrite(right_motor_1, LOW);
+  digitalWrite(right_motor_2, LOW);
+  delay(1000);
 }

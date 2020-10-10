@@ -1,7 +1,8 @@
-#include <Servo.h>
+ #include <Servo.h>
+#include <SoftwareSerial.h>
 
 Servo myservo;
- 
+char val;
 int pos = 0;
 
 const int s0 = 7;
@@ -30,9 +31,12 @@ int linecolor = 0; // stores line following color
 int tempcolor = 0; // stores temporary checked color
 int dir = 0; // 1 for left, 2 for right
 
+SoftwareSerial bt(A0,A1);
+
 void setup()   
 {  
   Serial.begin(9600);
+  bt.begin(9600);
   myservo.attach(11);
   pinMode(s0, OUTPUT);  
   pinMode(s1, OUTPUT);  
@@ -51,23 +55,63 @@ void setup()
     
 void loop() 
 {  
-
-// ******* EXECUTE THIS FOR TESTING ONLY ********
-//  //color();
-// // Serial.println(colorCheck());
-// //servoCheck();
-// myservo.write(90);
-// delay(1000); 
-// moveForward();
-// delay(5000);
-// stopRobot();
-//  delay(1000);
-////moveLeft();
-////delay(100);
-//// stopRobot();
-////  delay(1000);
-
-// ******* THIS IS ACTUAL CODE ********
+  while (bt.available() > 0)
+  {
+  val = bt.read();
+  Serial.println(val);
+  }
+  
+  if( val == 'F') // Forward
+    {
+      digitalWrite(en1,HIGH);
+      digitalWrite(en2,HIGH);
+      Serial.println("Forward");
+      digitalWrite(left_motor_1, HIGH);
+      digitalWrite(left_motor_2, LOW);
+      digitalWrite(right_motor_1, HIGH);
+      digitalWrite(right_motor_2, LOW);  
+    }
+  else if(val == 'B') // Backward
+    {
+      digitalWrite(en1,HIGH);
+      digitalWrite(en2,HIGH);
+      digitalWrite(left_motor_1, LOW);
+      digitalWrite(left_motor_2, HIGH);
+      digitalWrite(right_motor_1, LOW);
+      digitalWrite(right_motor_2, HIGH); 
+    }
+  
+    else if(val == 'L') //Left
+    {
+      digitalWrite(en1,HIGH);
+      digitalWrite(en2,HIGH);
+    digitalWrite(left_motor_1, HIGH);
+    digitalWrite(left_motor_2, LOW);
+    digitalWrite(right_motor_1, LOW);
+    digitalWrite(right_motor_2, LOW);
+    }
+    else if(val == 'R') //Right
+    {
+      digitalWrite(en1,HIGH);
+      digitalWrite(en2,HIGH);
+    digitalWrite(left_motor_1, LOW);
+    digitalWrite(left_motor_2, LOW);
+    digitalWrite(right_motor_1, HIGH);
+    digitalWrite(right_motor_2, LOW); 
+    }
+    
+  else if(val == 'S') //Stop
+    {
+      digitalWrite(en1,HIGH);
+      digitalWrite(en2,HIGH);
+    digitalWrite(left_motor_1, LOW);
+    digitalWrite(left_motor_2, LOW);
+    digitalWrite(right_motor_1, LOW);
+    digitalWrite(right_motor_2, LOW); 
+    }
+    
+    
+//  else if(val == 'P'){
 Serial.println("Started");
  myservo.write(90);
  delay(1000); 
@@ -83,6 +127,13 @@ tempcolor = colorCheck();
   linecolor = tempcolor;
   Serial.println(linecolor);
   while(1){
+  while (bt.available() > 0)
+  {
+  val = bt.read();
+  Serial.println(val);
+  }
+  if(val != 'P')
+  break;
   while(tempcolor == linecolor)
   {
     Serial.println("Following line");
@@ -106,7 +157,8 @@ tempcolor = colorCheck();
       }
   tempcolor = colorCheck();
   }
-}  
+//  }
+ }  
     
 void color()  
 {    

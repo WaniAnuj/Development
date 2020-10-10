@@ -1,8 +1,10 @@
+
+
 #include <Servo.h>
 
 Servo myservo;
  
-int pos = 0;
+int pos = 90;
 
 const int s0 = 7;
 const int s1 = 8;
@@ -34,6 +36,7 @@ void setup()
 {  
   Serial.begin(9600);
   myservo.attach(11);
+  myservo.write(90);
   pinMode(s0, OUTPUT);  
   pinMode(s1, OUTPUT);  
   pinMode(s2, OUTPUT);  
@@ -42,36 +45,16 @@ void setup()
   digitalWrite(s0, HIGH);  
   digitalWrite(s1, HIGH);  
   pinMode(left_motor_1, OUTPUT);
-    pinMode(left_motor_2, OUTPUT);
-    pinMode(right_motor_1, OUTPUT);
-    pinMode(right_motor_2, OUTPUT);
-    pinMode(en1, OUTPUT);
-    pinMode(en2, OUTPUT);
-}  
-    
-void loop() 
-{  
+  pinMode(left_motor_2, OUTPUT);
+  pinMode(right_motor_1, OUTPUT);
+  pinMode(right_motor_2, OUTPUT);
+  pinMode(en1, OUTPUT);
+  pinMode(en2, OUTPUT);
+  delay(2000);
 
-// ******* EXECUTE THIS FOR TESTING ONLY ********
-//  //color();
-// // Serial.println(colorCheck());
-// //servoCheck();
-// myservo.write(90);
-// delay(1000); 
-// moveForward();
-// delay(5000);
-// stopRobot();
-//  delay(1000);
-////moveLeft();
-////delay(100);
-//// stopRobot();
-////  delay(1000);
-
-// ******* THIS IS ACTUAL CODE ********
-Serial.println("Started");
- myservo.write(90);
- delay(1000); 
-tempcolor = colorCheck();
+  Serial.println("Started");
+  delay(1000); 
+  tempcolor = colorCheck();//1,2,3 indicates the color that is to be followed
   Serial.println(tempcolor);
   while (tempcolor == 4)
   {
@@ -81,8 +64,11 @@ tempcolor = colorCheck();
   }
   Serial.println("Line detected");
   linecolor = tempcolor;
-  Serial.println(linecolor);
-  while(1){
+  Serial.println(linecolor); 
+}  
+    
+void loop() 
+{  
   while(tempcolor == linecolor)
   {
     Serial.println("Following line");
@@ -92,21 +78,30 @@ tempcolor = colorCheck();
       case 3: Serial.println("Following GREEN color"); break;
       default: Serial.println("Unknown colour"); break;
       }
-    moveForward();
+    if(85<=pos<=95){
+        moveForward();
+      }
+      else{
+        Serial.println(pos);
+        stopRobot();
+      }
     tempcolor = colorCheck();
   }
-  stopRobot();
+    stopRobot();
     Serial.println("Checking color");
     dir = servoCheck();
+    
     switch(dir){
       case 0: stopRobot(); break;
       case 1: moveLeft(); break;
       case 2: moveRight(); break;
+      case 3: moveForward();break;
       default: break;
       }
+//      delay(100);
   tempcolor = colorCheck();
   }
-}  
+   
     
 void color()  
 {    
@@ -120,13 +115,13 @@ void color()
   digitalWrite(s2, HIGH);  
   //count OUT, pGreen, GREEN  
   green = pulseIn(out, digitalRead(out) == HIGH ? LOW : HIGH);
-  Serial.print(" R Intensity:");  
-  Serial.print(red, DEC);  
-  Serial.print(" G Intensity: ");  
-  Serial.print(green, DEC);  
-  Serial.print(" B Intensity : ");  
-  Serial.print(blue, DEC);
-  Serial.println();   
+//  Serial.print(" R Intensity:");  
+//  Serial.print(red, DEC);  
+//  Serial.print(" G Intensity: ");  
+//  Serial.print(green, DEC);  
+//  Serial.print(" B Intensity : ");  
+//  Serial.print(blue, DEC);
+//  Serial.println();   
 }
 
 int colorCheck()
@@ -167,30 +162,59 @@ int colorCheck()
 int servoCheck()
 {
   dir = 0;
-  for (pos = 90; pos >= 0; pos -= 1) {
+  for (pos = 90; pos >= 10; pos -= 1) {
+  ninetytozero:
   myservo.write(pos);
   delay(10);
-  }
-  tempcolor = colorCheck();
-  if(linecolor == tempcolor)
-  {
-    dir = 1;
-  }
-  myservo.write(90);
-  delay(10);
-  for (pos = 90; pos <= 180; pos += 1) {
-  myservo.write(pos);
-  delay(10);
-  }
   tempcolor = colorCheck();
   if(linecolor == tempcolor)
   {
     dir = 2;
+    return(dir);
   }
-  myservo.write(90);
-  delay(100);
-  return (dir);
-}
+  else{
+    if(pos!=10){
+    goto ninetytozero;
+  }
+  elseif(pos==10){
+    
+  }
+  }
+  check2:  // motor checking from 10deg to 170deg
+  for (pos = 10; pos <= 170; pos += 1) {
+  tentooneseventy:
+  myservo.write(pos);
+  delay(10);
+  tempcolor = colorCheck();
+  if(linecolor == tempcolor)
+  {
+    dir = 1;
+    return(dir);
+  }
+  else{
+    if(pos!=10){
+    goto tentooneseventy;
+  }
+  elseif(pos==10){
+    
+  }
+  }
+  for (pos = 170; pos >= 90; pos -= 1) {
+  myservo.write(pos);
+  delay(10);
+  tempcolor = colorCheck();
+  if(linecolor == tempcolor)
+  {
+    dir = 3;
+    return(dir);
+  }
+  else{
+    dir=0;
+    return(dir);
+  }
+  }
+  delay(10);
+  }
 
 void moveForward()
 {
@@ -213,29 +237,29 @@ void stopRobot()
   digitalWrite(left_motor_2, LOW);
   digitalWrite(right_motor_1, LOW);
   digitalWrite(right_motor_2, LOW);
-  delay(100);
+  delay(30);
 }
 
 void moveLeft()
 {
   Serial.println("Moving left");
-  analogWrite(en1, 200);
-  analogWrite(en2, 0);
+  analogWrite(en1, 0);
+  analogWrite(en2, 150);
   digitalWrite(left_motor_1, HIGH);
   digitalWrite(left_motor_2, LOW);
-  digitalWrite(right_motor_1, HIGH);
-  digitalWrite(right_motor_2, LOW);
-  delay(50);
+  digitalWrite(right_motor_1, LOW);
+  digitalWrite(right_motor_2, HIGH);
+  delay(20);
 }
 
 void moveRight()
 {
   Serial.println("Moving right");
-  analogWrite(en1, 0);
-  analogWrite(en2, 200);
-  digitalWrite(left_motor_1, HIGH);
-  digitalWrite(left_motor_2, LOW);
-  digitalWrite(right_motor_1, LOW);
+  analogWrite(en1, 150);
+  analogWrite(en2, 0);
+  digitalWrite(left_motor_1, LOW);
+  digitalWrite(left_motor_2, HIGH);
+  digitalWrite(right_motor_1, HIGH);
   digitalWrite(right_motor_2, LOW);
-  delay(50);
+  delay(20);
 }

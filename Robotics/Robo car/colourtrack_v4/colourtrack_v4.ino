@@ -1,8 +1,10 @@
+
+
 #include <Servo.h>
 
 Servo myservo;
  
-int pos = 0;
+int pos = 90;
 
 const int s0 = 7;
 const int s1 = 8;
@@ -34,6 +36,7 @@ void setup()
 {  
   Serial.begin(9600);
   myservo.attach(11);
+  myservo.write(90);
   pinMode(s0, OUTPUT);  
   pinMode(s1, OUTPUT);  
   pinMode(s2, OUTPUT);  
@@ -42,36 +45,16 @@ void setup()
   digitalWrite(s0, HIGH);  
   digitalWrite(s1, HIGH);  
   pinMode(left_motor_1, OUTPUT);
-    pinMode(left_motor_2, OUTPUT);
-    pinMode(right_motor_1, OUTPUT);
-    pinMode(right_motor_2, OUTPUT);
-    pinMode(en1, OUTPUT);
-    pinMode(en2, OUTPUT);
-}  
-    
-void loop() 
-{  
+  pinMode(left_motor_2, OUTPUT);
+  pinMode(right_motor_1, OUTPUT);
+  pinMode(right_motor_2, OUTPUT);
+  pinMode(en1, OUTPUT);
+  pinMode(en2, OUTPUT);
+  delay(2000);
 
-// ******* EXECUTE THIS FOR TESTING ONLY ********
-//  //color();
-// // Serial.println(colorCheck());
-// //servoCheck();
-// myservo.write(90);
-// delay(1000); 
-// moveForward();
-// delay(5000);
-// stopRobot();
-//  delay(1000);
-////moveLeft();
-////delay(100);
-//// stopRobot();
-////  delay(1000);
-
-// ******* THIS IS ACTUAL CODE ********
-Serial.println("Started");
- myservo.write(90);
- delay(1000); 
-tempcolor = colorCheck();
+  Serial.println("Started");
+  delay(1000); 
+  tempcolor = colorCheck();
   Serial.println(tempcolor);
   while (tempcolor == 4)
   {
@@ -81,8 +64,24 @@ tempcolor = colorCheck();
   }
   Serial.println("Line detected");
   linecolor = tempcolor;
-  Serial.println(linecolor);
-  while(1){
+  Serial.println(linecolor); 
+}  
+    
+void loop() 
+{  
+//  //color();
+// // Serial.println(colorCheck());
+// //servoCheck();
+// myservo.write(90);
+// delay(1000); 
+//// moveForward();
+//// delay(5000);
+//// stopRobot();
+////  delay(1000);zxxc 2 34y/
+//moveLeft();
+//delay(100);
+// stopRobot();
+//  delay(1000);
   while(tempcolor == linecolor)
   {
     Serial.println("Following line");
@@ -92,10 +91,15 @@ tempcolor = colorCheck();
       case 3: Serial.println("Following GREEN color"); break;
       default: Serial.println("Unknown colour"); break;
       }
-    moveForward();
+    if(pos==90){
+        moveForward();
+      }
+      else{
+        stopRobot();
+      }
     tempcolor = colorCheck();
   }
-  stopRobot();
+    stopRobot();
     Serial.println("Checking color");
     dir = servoCheck();
     switch(dir){
@@ -106,7 +110,7 @@ tempcolor = colorCheck();
       }
   tempcolor = colorCheck();
   }
-}  
+   
     
 void color()  
 {    
@@ -162,23 +166,13 @@ int colorCheck()
   colorid = 0;  
   }
   return colorid;
+  delay(100);
 }
 
 int servoCheck()
 {
   dir = 0;
-  for (pos = 90; pos >= 0; pos -= 1) {
-  myservo.write(pos);
-  delay(10);
-  }
-  tempcolor = colorCheck();
-  if(linecolor == tempcolor)
-  {
-    dir = 1;
-  }
-  myservo.write(90);
-  delay(10);
-  for (pos = 90; pos <= 180; pos += 1) {
+  for (pos = 90; pos >= 10; pos -= 1) {
   myservo.write(pos);
   delay(10);
   }
@@ -186,10 +180,25 @@ int servoCheck()
   if(linecolor == tempcolor)
   {
     dir = 2;
+    return(dir);
   }
-  myservo.write(90);
+  else{
+  for (pos = 0; pos <= 170; pos += 1) {
+  myservo.write(pos);
+  delay(10);
+  }
+  tempcolor = colorCheck();
+  if(linecolor == tempcolor)
+  {
+    dir = 1;
+    return(dir);
+  }
+  for (pos = 170; pos >= 90; pos -= 1) {
+  myservo.write(pos);
+  delay(10);
+  }
   delay(100);
-  return (dir);
+  }
 }
 
 void moveForward()
@@ -201,7 +210,7 @@ void moveForward()
   digitalWrite(left_motor_2, LOW);
   digitalWrite(right_motor_1, HIGH);
   digitalWrite(right_motor_2, LOW);
-  delay(50);
+  delay(100);
 }
 
 void stopRobot()
@@ -219,23 +228,23 @@ void stopRobot()
 void moveLeft()
 {
   Serial.println("Moving left");
-  analogWrite(en1, 200);
-  analogWrite(en2, 0);
+  analogWrite(en1, 0);
+  analogWrite(en2, 200);
   digitalWrite(left_motor_1, HIGH);
   digitalWrite(left_motor_2, LOW);
-  digitalWrite(right_motor_1, HIGH);
-  digitalWrite(right_motor_2, LOW);
+  digitalWrite(right_motor_1, LOW);
+  digitalWrite(right_motor_2, HIGH);
   delay(50);
 }
 
 void moveRight()
 {
   Serial.println("Moving right");
-  analogWrite(en1, 0);
-  analogWrite(en2, 200);
-  digitalWrite(left_motor_1, HIGH);
-  digitalWrite(left_motor_2, LOW);
-  digitalWrite(right_motor_1, LOW);
+  analogWrite(en1, 200);
+  analogWrite(en2, 0);
+  digitalWrite(left_motor_1, LOW);
+  digitalWrite(left_motor_2, HIGH);
+  digitalWrite(right_motor_1, HIGH);
   digitalWrite(right_motor_2, LOW);
   delay(50);
 }

@@ -51,23 +51,21 @@ void setup()
     
 void loop() 
 {  
-
-// ******* EXECUTE THIS FOR TESTING ONLY ********
 //  //color();
 // // Serial.println(colorCheck());
 // //servoCheck();
 // myservo.write(90);
 // delay(1000); 
-// moveForward();
-// delay(5000);
+//// moveForward();
+//// delay(5000);
+//// stopRobot();
+////  delay(1000);zxxc 2 34y/
+//moveLeft();
+//delay(100);
 // stopRobot();
 //  delay(1000);
-////moveLeft();
-////delay(100);
-//// stopRobot();
-////  delay(1000);
 
-// ******* THIS IS ACTUAL CODE ********
+  
 Serial.println("Started");
  myservo.write(90);
  delay(1000); 
@@ -106,7 +104,7 @@ tempcolor = colorCheck();
       }
   tempcolor = colorCheck();
   }
-}  
+ }  
     
 void color()  
 {    
@@ -195,8 +193,9 @@ int servoCheck()
 void moveForward()
 {
   Serial.println("Moving forward");
-  analogWrite(en1, 100);
-  analogWrite(en2, 100);
+  analogWrite(en1, 200);
+  analogWrite(en2, 2+*/ 54
+  0);
   digitalWrite(left_motor_1, HIGH);
   digitalWrite(left_motor_2, LOW);
   digitalWrite(right_motor_1, HIGH);
