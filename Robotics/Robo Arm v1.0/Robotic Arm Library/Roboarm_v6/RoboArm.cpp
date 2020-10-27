@@ -22,9 +22,11 @@ void roboarm::roboarm_setup(){
     left.write(750);
     base.write(750);
     right.write(750);
+    Serial.println("Arduino is ready");
 }
 
 void roboarm::recvWithStartEndMarkers(){
+  
     static boolean recvInProgress = false;
     static byte ndx = 0;
     char startMarker = '<';
@@ -73,6 +75,8 @@ void roboarm::showNewData() {
         count++;
         
     }
+   motor=0;
+   newData = false;
   }
 }
 
@@ -417,7 +421,7 @@ void roboarm::prog_mode_claw(){
 void roboarm::roboarm_functioning(){
   recvWithStartEndMarkers();
   showNewData();
-// prevcount, newcount
+
 if(strcmp(commands[motor],"Base") == 0){
   prog_mode_base();
 }
