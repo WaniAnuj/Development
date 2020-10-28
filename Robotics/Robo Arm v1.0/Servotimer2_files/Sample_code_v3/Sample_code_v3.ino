@@ -64,17 +64,12 @@ void setup() {
 void loop() {
 // 80 aproximately equals to 10 deg
 for(i=750;i<=1583;i+=8){
-//  if(i<=1343){ // to move the left motor 30 deg less than the other motors
-//    left.write(i);
-    right.write(i);
     claw.write(i);
     delay(10);
-//  }
-//  else{
-//    right.write(i);
-//    claw.write(i);
-//    delay(10);
-//  }
+}
+for(i=750;i<=1583;i+=8){
+    right.write(i);
+    delay(10);
 }
   for(i=750;i<=1583;i+=8){
     claw.write(2333-i);
@@ -119,16 +114,11 @@ for(i=750;i<=1583;i+=8){
     delay(10);
   }
   for(i=750;i<=1583;i+=8){
-//    if(i<=1343){
     right.write(2333-i);
-    claw.write(2333-i);
-//    left.write(2093-i);
     delay(10);
-//  }
-//  else{
-//    right.write(2333-i);
-//    claw.write(2333-i);
-//    delay(10);
-//  }
+}
+  for(i=750;i<=1583;i+=8){
+    claw.write(2333-i);
+    delay(10);
 }
 }
