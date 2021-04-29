@@ -97,19 +97,19 @@ void loop()
 //  strcat(gps_lon,DeviceID);
 //  strcat(gps_lon,",");
 
-switch (bGlobalErr)
-   {
-     case 0:
-       Serial.print("Current humdity = ");
-       Serial.print(dht_dat[0], DEC);
-       Serial.print(".");
-       Serial.print(dht_dat[1], DEC);
-       Serial.print("%  ");
-       Serial.print("temperature = ");
-       Serial.print(dht_dat[2], DEC);
-       Serial.print(".");
-       Serial.print(dht_dat[3], DEC);
-       Serial.println("C  ");
+//switch (bGlobalErr)
+//   {
+//     case 0:
+//       Serial.print("Current humdity = ");
+//       Serial.print(dht_dat[0], DEC);
+//       Serial.print(".");
+//       Serial.print(dht_dat[1], DEC);
+//       Serial.print("%  ");
+//       Serial.print("temperature = ");
+//       Serial.print(dht_dat[2], DEC);
+//       Serial.print(".");
+//       Serial.print(dht_dat[3], DEC);
+//       Serial.println("C  ");
 //       strcat(gps_lon,",");
 //       strcat(gps_lon,gps_lat); 
 //       strcat(gps_lon,","); 
@@ -136,20 +136,20 @@ switch (bGlobalErr)
        // send data
        rf95.send(datasend, sizeof(datasend));  
        rf95.waitPacketSent();
-       break;
-     case 1:
-        Serial.println("Error 1: DHT start condition 1 not met.");
-        break;
-     case 2:
-        Serial.println("Error 2: DHT start condition 2 not met.");
-        break;
-     case 3:
-        Serial.println("Error 3: DHT checksum error.");
-        break;
-     default:
-        Serial.println("Error: Unrecognized code encountered.");
-        break;
-    }
+//       break;
+//     case 1:
+//        Serial.println("Error 1: DHT start condition 1 not met.");
+//        break;
+//     case 2:
+//        Serial.println("Error 2: DHT start condition 2 not met.");
+//        break;
+//     case 3:
+//        Serial.println("Error 3: DHT checksum error.");
+//        break;
+//     default:
+//        Serial.println("Error: Unrecognized code encountered.");
+//        break;
+//    }
   
    // Now wait for a reply
   receivepacket();

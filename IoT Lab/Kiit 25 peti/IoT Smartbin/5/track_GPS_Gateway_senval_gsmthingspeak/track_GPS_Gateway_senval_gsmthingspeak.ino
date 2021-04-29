@@ -1,5 +1,5 @@
 #include <Console.h> 
-#include <Process.h>
+//#include <Process.h>
 #include <SPI.h>
 #include <RH_RF95.h>
 
@@ -20,6 +20,9 @@ char dst[20]="\0";           //Storage distance
 void getTimeStamp();     //LG01 will call the Linux "date" command and get the time stamp
 void receivepacket();    //Processing receive message and store it in the appropriate array
 void run_send_gps_data();//LG01 will call the Linux "send_gps_data.sh" command and write the GPS data in GPSWOX.com
+
+
+
 
 void setup() { 
   Bridge.begin(115200);  
@@ -43,48 +46,47 @@ void loop(){
  receivepacket();
 }
 
-void getTimeStamp() {
-  Process time;
+//void getTimeStamp() {
+//  Process time;
   // date is a command line utility to get the date and the time 
   // in different formats depending on the additional parameter 
-  time.begin("date");
-  time.addParameter("+%D-%T");  // parameters: D for the complete date mm/dd/yy
-                                //             T for the time hh:mm:ss    
-  time.run();  // run the command
+//  time.begin("date");
+//  time.addParameter("+%D-%T");  // parameters: D for the complete date mm/dd/yy
+//                                //             T for the time hh:mm:ss    
+//  time.run();  // run the command
+//
+//  // read the output of the command
+//  while(time.available()>0) {
+//    char c = time.read();
+//    Console.print(c);
+//  }
+//}
 
-  // read the output of the command
-  while(time.available()>0) {
-    char c = time.read();
-    Console.print(c);
-  }
-}
-
-void run_send_gps_data() {//send_gps_data.sh -d DeviceID -l latitude -n longtitude -a altitude
-  Process p;    // Create a process and call it "p"
-  p.begin("send_gps_data.sh");
-  p.addParameter("-d");
-  p.addParameter(DeviceID);
-  p.addParameter("-l"); 
-  p.addParameter(lat);
-  p.addParameter("-n"); 
-  p.addParameter(lon);
-  p.addParameter("-a"); 
-  p.addParameter(alt);
-  p.run();    // Run the process and wait for its termination
-}
+//void run_send_gps_data() {//send_gps_data.sh -d DeviceID -l latitude -n longtitude -a altitude
+//  Process p;    // Create a process and call it "p"
+//  p.begin("send_gps_data.sh");
+//  p.addParameter("-d");
+//  p.addParameter(DeviceID);
+//  p.addParameter("-l"); 
+//  p.addParameter(lat);
+//  p.addParameter("-n"); 
+//  p.addParameter(lon);
+//  p.addParameter("-a"); 
+//  p.addParameter(alt);
+//  p.run();    // Run the process and wait for its termination
+//}
 
 //Receiver LoRa packets and forward it 
 void receivepacket() {
+  int i = 0,j=0,code[8];
+int m1=0,m2=0,m3=0,m4=0,m5=0,m6=0,m7=0,m8=0;   
+uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
+char message[50]="\0";
+uint8_t len = sizeof(buf);
    if (rf95.available())
   {
     // received a packet
     Console.print("Get new data: ");
-
-    int i = 0,j=0,code[8];
-    int m1=0,m2=0,m3=0,m4=0,m5=0,m6=0,m7=0,m8=0;   
-    uint8_t buf[50];
-    char message[50]="\0";
-    uint8_t len = sizeof(buf);
     if (rf95.recv(buf, &len)){
       Console.print((char*)buf);
       strcpy(message,(char *)buf);
@@ -115,12 +117,12 @@ void receivepacket() {
     }
     for(int k=code[2]+1;k<code[3];k++)
     {
-      tem[m4]=message[k];//get tempreture
+      hum[m4]=message[k];//get tempreture
       m4++;
     }
     for(int k=code[3]+1;k<code[4];k++)
     {
-      hum[m5]=message[k];//get humidity
+      tem[m5]=message[k];//get humidity
       m5++;
     }
     for(int k=code[4]+1;k<code[5];k++)
@@ -141,19 +143,19 @@ void receivepacket() {
 //    run_send_gps_data();
     
     Console.print("  with RSSI: ");
-    Console.print(rf95.lastRssi(), DEC);
-    Console.print("  ");getTimeStamp();
+    Console.println(rf95.lastRssi(), DEC);
+//    Console.print("  ");getTimeStamp();
     Console.print("the longtitude is " );Console.print(lon); Console.println(" deg");
     Console.print("the latitude is ");Console.print(lat);Console.println(" deg");
     Console.print("the altitude is ");Console.print(alt);Console.println(" deg");
     Console.print("the tempreture is ");Console.print(tem);Console.println(" C");
-    Console.print("the humidity is ");Console.print(hum);Console.println("%");
+    Console.print("the humidity is ");Console.print(hum);Console.println(" %");
     Console.print("the CO2 presence is ");Console.print(ppm);Console.println(" ppm");
     Console.print("the PIR count is ");Console.println(pir);
     Console.print("the garbage level is ");Console.print(dst);Console.println(" cm");
     
     
-    uint8_t data[] = "Gateway receive GPS data";
+    uint8_t data[] = "Gateway received GPS data";
     rf95.send(data, sizeof(data));
     rf95.waitPacketSent();
   }

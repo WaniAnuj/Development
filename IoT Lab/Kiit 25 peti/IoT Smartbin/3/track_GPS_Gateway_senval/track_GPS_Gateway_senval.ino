@@ -80,7 +80,7 @@ void receivepacket() {
     // received a packet
     Console.print("Get new data: ");
 
-    int i = 0,j=0,code[8];
+    int i = 0,j=0,code[7];
     int m1=0,m2=0,m3=0,m4=0,m5=0,m6=0,m7=0,m8=0;   
     uint8_t buf[100];
     char message[100]="\0";
@@ -135,6 +135,7 @@ void receivepacket() {
     }
     for(int k=code[6]+1;k<code[7];k++)
     {
+      dst[m8]="";
       dst[m8]=message[k];//get garbage lvl
       m8++;
     }

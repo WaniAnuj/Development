@@ -1,0 +1,38 @@
+# -----------------------------------------
+# Syntax colouring for iotlab library
+# -----------------------------------------
+
+# Datatypes (such as objects)
+iotlab KEYWORD1
+iot KEYWORD1
+
+#Methods / functions
+Serial_Monitor KEYWORD2
+Wifi_begin KEYWORD2
+Wifi_createlink KEYWORD2
+Wifi_setup KEYWORD2
+Wifi_start KEYWORD2
+Wifi_name KEYWORD2
+Wifi_Password KEYWORD2
+Wifi_Connect KEYWORD2
+Cloudkey KEYWORD2
+downloadkey KEYWORD2
+Cloud_channel_number KEYWORD2
+Cloud_field_number KEYWORD2
+Cloud KEYWORD2
+Download KEYWORD2
+PrivateDownload KEYWORD2
+Cloud_lightsensor KEYWORD2
+led_pin KEYWORD2
+led_on_off KEYWORD2
+lightsensor_pin KEYWORD2
+Ultrasound_pin KEYWORD2
+Cloud_Ultrasound KEYWORD2
+Buzzer_pin KEYWORD2
+distance KEYWORD2
+Buzzout KEYWORD2
+distance_check KEYWORD2
+light_buzz KEYWORD2
+sunrise_alarm KEYWORD2
+distance_alarm KEYWORD2
+burglar_alarm KEYWORD2
